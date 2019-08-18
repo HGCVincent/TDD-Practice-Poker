@@ -91,6 +91,16 @@ public class Game {
         return EQUALIZE;
     }
 
+    private String CompareFlush() {
+        if (player1.getPokerDtos().get(0).getType() > player2.getPokerDtos().get(0).getType()){
+            return P1_WIN;
+        }
+        if (player1.getPokerDtos().get(0).getType() < player2.getPokerDtos().get(0).getType()){
+            return P2_WIN;
+        }
+        return EQUALIZE;
+    }
+
     public String CompareStrategyInSameLevel(int samePokerNumberCount){
         int pairCount = getPokerNumberByCount(StatisticalPoker1, samePokerNumberCount).size();
         for (int i = 0; i < pairCount; i++) {
@@ -104,18 +114,11 @@ public class Game {
         return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
     }
 
-    private String CompareFlush() {
-        if (player1.getPokerDtos().get(0).getType() > player2.getPokerDtos().get(0).getType()){
-            return P1_WIN;
-        }
-        if (player1.getPokerDtos().get(0).getType() < player2.getPokerDtos().get(0).getType()){
-            return P2_WIN;
-        }
-        return EQUALIZE;
-    }
 
     public String CompareWhenSameLevel(int playerLevel){
         switch (playerLevel){
+            case FOUR_OF_A_KIND:
+                return CompareStrategyInSameLevel(4);
             case FULL_HOUSE:
             case THREE_OF_A_KIND:
                 return CompareStrategyInSameLevel(3);
