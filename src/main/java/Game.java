@@ -20,25 +20,7 @@ public class Game {
         P2_WIN = player2.getName() + " win";
     }
 
-    public String play() {
-        player1.setPokerDtos(player1.getPokerDtos().stream().sorted(Comparator.comparing(PokerDto::getNumber).reversed()).collect(Collectors.toList()));
-        player2.setPokerDtos(player2.getPokerDtos().stream().sorted(Comparator.comparing(PokerDto::getNumber).reversed()).collect(Collectors.toList()));
-        StatisticalPoker1 = player1.getPokerDtos().stream().collect(Collectors.groupingBy(PokerDto::getNumber, Collectors.counting()));
-        StatisticalPoker2 = player2.getPokerDtos().stream().collect(Collectors.groupingBy(PokerDto::getNumber, Collectors.counting()));
-
-        int levelP1 = setPlayerLevel(StatisticalPoker1.size());
-        int levelP2 = setPlayerLevel(StatisticalPoker2.size());
-
-        if (levelP1 > levelP2) {
-            return P1_WIN;
-        }
-        if (levelP1 < levelP2) {
-            return P2_WIN;
-        }
-        return CompareWhenEqual(levelP1);
-    }
-
-    public List<Integer> getPairNumberStatistics(Map<Integer, Long> map, int value) {
+    public List<Integer> getPokerNumberByCount(Map<Integer, Long> map, int value) {
         List<Integer> keyList = new ArrayList<>();
         for (Integer key : map.keySet()) {
             if (map.get(key) == value) {
@@ -59,31 +41,57 @@ public class Game {
         }
     }
 
+    public String CompareHighCard(List<Integer> pokers1Number, List<Integer> pokers2Number){
+        for (int i = 0; i < pokers1Number.size(); i++) {
+            if (pokers1Number.get(i) > pokers2Number.get(i)) {
+                return P1_WIN;
+            } else if (pokers1Number.get(i) < pokers2Number.get(i)) {
+                return P2_WIN;
+            }
+        }
+        return EQUALIZE;
+    }
+
+    public String CompareOnePairOrTwoPair(){
+        int pairCount = getPokerNumberByCount(StatisticalPoker1, 2).size();
+        for (int i = 0; i < pairCount; i++) {
+            if (getPokerNumberByCount(StatisticalPoker1, 2).get(i) > getPokerNumberByCount(StatisticalPoker2, 2).get(i)) {
+                return P1_WIN;
+            }
+            if (getPokerNumberByCount(StatisticalPoker1, 2).get(i) > getPokerNumberByCount(StatisticalPoker2, 2).get(i)) {
+                return P2_WIN;
+            }
+        }
+        return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
+    }
+
     public String CompareWhenEqual(int playerLevel){
         switch (playerLevel){
             case TWO_PAIR:
-                for (int i = 0; i < 2; i++) {
-                    if (getPairNumberStatistics(StatisticalPoker1, 2).get(i) > getPairNumberStatistics(StatisticalPoker2, 2).get(i)) {
-                        return P1_WIN;
-                    }
-                    if (getPairNumberStatistics(StatisticalPoker1, 2).get(i) > getPairNumberStatistics(StatisticalPoker2, 2).get(i)) {
-                        return P2_WIN;
-                    }
-                }
-                break;
             case ONE_PAIR:
-                return getPairNumberStatistics(StatisticalPoker1, 2).get(0) > getPairNumberStatistics(StatisticalPoker2, 2).get(0) ? (P1_WIN) : (P2_WIN);
+                return CompareOnePairOrTwoPair();
             case HIGH_CARD:
-                for (int i = 0; i < 5; i++) {
-                    if (player1.getPokerDtos().get(i).getNumber() > player2.getPokerDtos().get(i).getNumber()) {
-                        return P1_WIN;
-                    } else if (player1.getPokerDtos().get(i).getNumber() < player2.getPokerDtos().get(i).getNumber()) {
-                        return P2_WIN;
-                    }
-                }
-                break;
+                return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
         }
         return EQUALIZE;
+    }
+
+    public String play() {
+        player1.setPokerDtos(player1.getPokerDtos().stream().sorted(Comparator.comparing(PokerDto::getNumber).reversed()).collect(Collectors.toList()));
+        player2.setPokerDtos(player2.getPokerDtos().stream().sorted(Comparator.comparing(PokerDto::getNumber).reversed()).collect(Collectors.toList()));
+        StatisticalPoker1 = player1.getPokerDtos().stream().collect(Collectors.groupingBy(PokerDto::getNumber, Collectors.counting()));
+        StatisticalPoker2 = player2.getPokerDtos().stream().collect(Collectors.groupingBy(PokerDto::getNumber, Collectors.counting()));
+
+        int levelP1 = setPlayerLevel(StatisticalPoker1.size());
+        int levelP2 = setPlayerLevel(StatisticalPoker2.size());
+
+        if (levelP1 > levelP2) {
+            return P1_WIN;
+        }
+        if (levelP1 < levelP2) {
+            return P2_WIN;
+        }
+        return CompareWhenEqual(levelP1);
     }
 
 }
