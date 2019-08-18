@@ -6,6 +6,7 @@ public class Game {
     protected final static int ONE_PAIR = 2;
     protected final static int TWO_PAIR = 3;
     protected final static int THREE_OF_A_KIND = 4;
+    protected final static int STRAIGHT = 5;
     private final String P1_WIN;
     private final String P2_WIN;
     private final String EQUALIZE = "Equalize";
@@ -31,9 +32,22 @@ public class Game {
         return keyList;
     }
 
+    public boolean isStraight(List<Integer> pokersNumberASC){
+        for (int i = 0; i < pokersNumberASC.size() - 1; i++) {
+            if (pokersNumberASC.get(i+1) - pokersNumberASC.get(i) > 1){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public int setPlayerLevel(Map<Integer, Long> statisticalPoker) {
         int sizeAfterStatistics = statisticalPoker.size();
         switch (sizeAfterStatistics) {
+            case 5:
+                if (isStraight(getPokerNumberByCount(statisticalPoker, 1))){
+                    return STRAIGHT;
+                }
             case 4:
                 return ONE_PAIR;
             case 3:
@@ -41,9 +55,8 @@ public class Game {
                     return TWO_PAIR;
                 }
                 else return THREE_OF_A_KIND;
-            default:
-                return HIGH_CARD;
         }
+        return HIGH_CARD;
     }
 
     public String CompareHighCard(List<Integer> pokers1Number, List<Integer> pokers2Number){
