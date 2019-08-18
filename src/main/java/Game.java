@@ -10,6 +10,7 @@ public class Game {
     protected final static int FLUSH = 6;
     protected final static int FULL_HOUSE = 7;
     protected final static int FOUR_OF_A_KIND = 8;
+    protected final static int STRAIGHT_FLUSH = 9;
     private final String P1_WIN;
     private final String P2_WIN;
     private final String EQUALIZE = "Equalize";
@@ -35,18 +36,18 @@ public class Game {
         return keyList;
     }
 
-    public boolean isStraight(List<Integer> pokersNumberASC){
+    public boolean isStraight(List<Integer> pokersNumberASC) {
         for (int i = 0; i < pokersNumberASC.size() - 1; i++) {
-            if (pokersNumberASC.get(i+1) - pokersNumberASC.get(i) > 1){
+            if (pokersNumberASC.get(i + 1) - pokersNumberASC.get(i) > 1) {
                 return false;
             }
         }
         return true;
     }
 
-    public boolean isFlush(List<PokerDto> pokerDtos){
+    public boolean isFlush(List<PokerDto> pokerDtos) {
         for (int i = 0; i < pokerDtos.size() - 1; i++) {
-            if (pokerDtos.get(i).getType() != pokerDtos.get(i + 1).getType()){
+            if (pokerDtos.get(i).getType() != pokerDtos.get(i + 1).getType()) {
                 return false;
             }
         }
@@ -57,10 +58,13 @@ public class Game {
         int sizeAfterStatistics = statisticalPoker.size();
         switch (sizeAfterStatistics) {
             case 5:
-                if (isFlush(pokerDtos)){
+                if (isFlush(pokerDtos) && isStraight(getPokerNumberByCount(statisticalPoker, 1))) {
+                    return STRAIGHT_FLUSH;
+                }
+                if (isFlush(pokerDtos)) {
                     return FLUSH;
                 }
-                if (isStraight(getPokerNumberByCount(statisticalPoker, 1))){
+                if (isStraight(getPokerNumberByCount(statisticalPoker, 1))) {
                     return STRAIGHT;
                 }
             case 4:
@@ -68,23 +72,20 @@ public class Game {
             case 3:
                 if (getPokerNumberByCount(statisticalPoker, 3).size() == 0) {
                     return TWO_PAIR;
-                }
-                else return THREE_OF_A_KIND;
+                } else return THREE_OF_A_KIND;
             case 2:
                 if (getPokerNumberByCount(statisticalPoker, 4).size() == 0) {
                     return FULL_HOUSE;
-                }
-                else return FOUR_OF_A_KIND;
+                } else return FOUR_OF_A_KIND;
         }
         return HIGH_CARD;
     }
 
-    public String CompareHighCard(List<Integer> pokers1Number, List<Integer> pokers2Number){
+    public String CompareHighCard(List<Integer> pokers1Number, List<Integer> pokers2Number) {
         for (int i = 0; i < pokers1Number.size(); i++) {
             if (pokers1Number.get(i) > pokers2Number.get(i)) {
                 return P1_WIN;
-            }
-            else if (pokers1Number.get(i) < pokers2Number.get(i)) {
+            } else if (pokers1Number.get(i) < pokers2Number.get(i)) {
                 return P2_WIN;
             }
         }
@@ -92,16 +93,16 @@ public class Game {
     }
 
     private String CompareFlush() {
-        if (player1.getPokerDtos().get(0).getType() > player2.getPokerDtos().get(0).getType()){
+        if (player1.getPokerDtos().get(0).getType() > player2.getPokerDtos().get(0).getType()) {
             return P1_WIN;
         }
-        if (player1.getPokerDtos().get(0).getType() < player2.getPokerDtos().get(0).getType()){
+        if (player1.getPokerDtos().get(0).getType() < player2.getPokerDtos().get(0).getType()) {
             return P2_WIN;
         }
         return EQUALIZE;
     }
 
-    public String CompareStrategyInSameLevel(int samePokerNumberCount){
+    public String CompareStrategyInSameLevel(int samePokerNumberCount) {
         int pairCount = getPokerNumberByCount(StatisticalPoker1, samePokerNumberCount).size();
         for (int i = 0; i < pairCount; i++) {
             if (getPokerNumberByCount(StatisticalPoker1, samePokerNumberCount).get(i) > getPokerNumberByCount(StatisticalPoker2, samePokerNumberCount).get(i)) {
@@ -111,12 +112,12 @@ public class Game {
                 return P2_WIN;
             }
         }
-        return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
+        return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1), getPokerNumberByCount(StatisticalPoker2, 1));
     }
 
 
-    public String CompareWhenSameLevel(int playerLevel){
-        switch (playerLevel){
+    public String CompareWhenSameLevel(int playerLevel) {
+        switch (playerLevel) {
             case FOUR_OF_A_KIND:
                 return CompareStrategyInSameLevel(4);
             case FULL_HOUSE:
@@ -128,7 +129,7 @@ public class Game {
             case ONE_PAIR:
                 return CompareStrategyInSameLevel(2);
             case HIGH_CARD:
-                return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
+                return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1), getPokerNumberByCount(StatisticalPoker2, 1));
         }
         return EQUALIZE;
     }
