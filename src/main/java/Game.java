@@ -28,6 +28,16 @@ public class Game {
             if (levelP1 == ONE_PAIR && levelP2 == ONE_PAIR){
                 return getPairNumberStatistics(StatisticalPoker1,2).get(0) > getPairNumberStatistics(StatisticalPoker2, 2).get(0) ? (player1.getName() + " win") :  (player2.getName() + " win");
             }
+            if (levelP1 == TWO_PAIR && levelP2 == TWO_PAIR){
+                for (int i = 0; i < 2; i++){
+                    if (getPairNumberStatistics(StatisticalPoker1,2).get(i) > getPairNumberStatistics(StatisticalPoker2, 2).get(i)){
+                        return player1.getName() + " win";
+                    }
+                    if (getPairNumberStatistics(StatisticalPoker1,2).get(i) > getPairNumberStatistics(StatisticalPoker2, 2).get(i)){
+                        return player2.getName() + " win";
+                    }
+                }
+            }
             if (levelP1 == HIGH_CARD && levelP2 == HIGH_CARD){
                 for (int i = 0; i < 5; i++) {
                     if (player1.getPokerDtos().get(i).getNumber() > player2.getPokerDtos().get(i).getNumber()) {
