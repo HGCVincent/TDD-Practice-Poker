@@ -9,6 +9,7 @@ public class Game {
     protected final static int STRAIGHT = 5;
     protected final static int FLUSH = 6;
     protected final static int FULL_HOUSE = 7;
+    protected final static int FOUR_OF_A_KIND = 8;
     private final String P1_WIN;
     private final String P2_WIN;
     private final String EQUALIZE = "Equalize";
@@ -70,7 +71,10 @@ public class Game {
                 }
                 else return THREE_OF_A_KIND;
             case 2:
-                return FULL_HOUSE;
+                if (getPokerNumberByCount(statisticalPoker, 4).size() == 0) {
+                    return FULL_HOUSE;
+                }
+                else return FOUR_OF_A_KIND;
         }
         return HIGH_CARD;
     }
@@ -90,8 +94,6 @@ public class Game {
     public String CompareStrategyInSameLevel(int samePokerNumberCount){
         int pairCount = getPokerNumberByCount(StatisticalPoker1, samePokerNumberCount).size();
         for (int i = 0; i < pairCount; i++) {
-            int a = getPokerNumberByCount(StatisticalPoker1, samePokerNumberCount).get(i);
-            int b = getPokerNumberByCount(StatisticalPoker2, samePokerNumberCount).get(i);
             if (getPokerNumberByCount(StatisticalPoker1, samePokerNumberCount).get(i) > getPokerNumberByCount(StatisticalPoker2, samePokerNumberCount).get(i)) {
                 return P1_WIN;
             }
