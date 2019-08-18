@@ -1,6 +1,6 @@
 public class Game {
     public String play(Player player1, Player player2) {
-        if (Integer.parseInt(player1.getPoker().getNumber()) > Integer.parseInt(player2.getPoker().getNumber())){
+        if (player1.getPoker().getNumber() > player2.getPoker().getNumber()){
             return player1.getName() + " win";
         }
         else {

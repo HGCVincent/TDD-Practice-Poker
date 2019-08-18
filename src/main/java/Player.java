@@ -1,17 +1,17 @@
 public class Player {
     String name;
-    Poker poker;
+    PokerDto poker;
 
     public Player(String name, Poker poker) {
         this.name = name;
-        this.poker = poker;
+        this.poker =new PokerDto(poker);
     }
 
     public String getName() {
         return name;
     }
 
-    public Poker getPoker() {
+    public PokerDto getPoker() {
         return poker;
     }
 }
