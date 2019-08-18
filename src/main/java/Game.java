@@ -58,24 +58,27 @@ public class Game {
         return EQUALIZE;
     }
 
-    public String CompareOnePairOrTwoPair(){
-        int pairCount = getPokerNumberByCount(StatisticalPoker1, 2).size();
+    public String CompareOnePairOrTwoPairOrTreeOfAKind(int smaePokerNumberCount){
+        int pairCount = getPokerNumberByCount(StatisticalPoker1, smaePokerNumberCount).size();
         for (int i = 0; i < pairCount; i++) {
-            if (getPokerNumberByCount(StatisticalPoker1, 2).get(i) > getPokerNumberByCount(StatisticalPoker2, 2).get(i)) {
+            if (getPokerNumberByCount(StatisticalPoker1, smaePokerNumberCount).get(i) > getPokerNumberByCount(StatisticalPoker2, smaePokerNumberCount).get(i)) {
                 return P1_WIN;
             }
-            if (getPokerNumberByCount(StatisticalPoker1, 2).get(i) > getPokerNumberByCount(StatisticalPoker2, 2).get(i)) {
+            if (getPokerNumberByCount(StatisticalPoker1, smaePokerNumberCount).get(i) > getPokerNumberByCount(StatisticalPoker2, smaePokerNumberCount).get(i)) {
                 return P2_WIN;
             }
         }
         return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
     }
 
+
     public String CompareWhenSameLevel(int playerLevel){
         switch (playerLevel){
+            case THREE_OF_A_KIND:
+                return CompareOnePairOrTwoPairOrTreeOfAKind(3);
             case TWO_PAIR:
             case ONE_PAIR:
-                return CompareOnePairOrTwoPair();
+                return CompareOnePairOrTwoPairOrTreeOfAKind(2);
             case HIGH_CARD:
                 return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
         }
