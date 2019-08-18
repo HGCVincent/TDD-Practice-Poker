@@ -97,9 +97,20 @@ public class Game {
         return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
     }
 
+    private String CompareFlush() {
+        if (player1.getPokerDtos().get(0).getType() > player2.getPokerDtos().get(0).getType()){
+            return P1_WIN;
+        }
+        if (player1.getPokerDtos().get(0).getType() < player2.getPokerDtos().get(0).getType()){
+            return P2_WIN;
+        }
+        return EQUALIZE;
+    }
 
     public String CompareWhenSameLevel(int playerLevel){
         switch (playerLevel){
+            case FLUSH:
+                return CompareFlush();
             case THREE_OF_A_KIND:
                 return CompareOnePairOrTwoPairOrTreeOfAKind(3);
             case TWO_PAIR:
@@ -110,6 +121,7 @@ public class Game {
         }
         return EQUALIZE;
     }
+
 
     public String play() {
         player1.setPokerDtos(player1.getPokerDtos().stream().sorted(Comparator.comparing(PokerDto::getNumber).reversed()).collect(Collectors.toList()));

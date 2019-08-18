@@ -1,6 +1,6 @@
 public class PokerDto {
     private int number;
-    private String type;
+    private int type;
 
     public PokerDto(Poker poker) {
         switch (poker.getNumber()){
@@ -20,14 +20,27 @@ public class PokerDto {
                 this.number = Integer.parseInt(poker.getNumber());
                 break;
         }
-        this.type =poker.getType();
+        switch (poker.getType()){
+            case "D":
+                this.type = 1;
+                break;
+            case "C":
+                this.type = 2;
+                break;
+            case "H":
+                this.type = 3;
+                break;
+            case "S":
+                this.type = 4;
+                break;
+        }
     }
 
     public int getNumber() {
         return number;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 }

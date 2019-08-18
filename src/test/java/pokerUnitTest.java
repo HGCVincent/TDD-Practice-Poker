@@ -195,4 +195,19 @@ public class pokerUnitTest {
 
         assertEquals("player1 win",result);
     }
+
+    //14
+    @Test
+    public void should_return_player1_win_when_player1_vs_player2_given_4H_7H_9H_10H_QH_vs_2S_3S_4S_5S_6S() {
+        Player player1 = new Player("player1", new Poker("4","H"), new Poker("7","H"), new Poker("9","H"),
+                new Poker("10","H"),new Poker("Q","H"));
+
+        Player player2 = new Player("player2", new Poker("4","S"), new Poker("7","S"), new Poker("9","S"),
+                new Poker("10","S"),new Poker("Q","S"));
+
+        Game game = new Game(player1,player2);
+        String result = game.play();
+
+        assertEquals("player2 win",result);
+    }
 }
