@@ -20,6 +20,7 @@ public class PokerDto {
                 this.number = Integer.parseInt(poker.getNumber());
                 break;
         }
+        this.type =poker.getType();
     }
 
     public int getNumber() {

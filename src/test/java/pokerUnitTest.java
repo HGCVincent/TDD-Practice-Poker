@@ -168,7 +168,7 @@ public class pokerUnitTest {
 
     //12
     @Test
-    public void should_return_player1_win_when_player1_vs_player2_given_4S_4C_4D_9C_KD_vs_2H_3C_4D_5C_6D() {
+    public void should_return_player2_win_when_player1_vs_player2_given_4S_4C_4D_9C_KD_vs_2H_3C_4D_5C_6D() {
         Player player1 = new Player("player1", new Poker("4","S"), new Poker("4","C"), new Poker("4","D"),
                 new Poker("9","C"),new Poker("K","D"));
 
@@ -179,5 +179,20 @@ public class pokerUnitTest {
         String result = game.play();
 
         assertEquals("player2 win",result);
+    }
+
+    //13
+    @Test
+    public void should_return_player1_win_when_player1_vs_player2_given_4H_7H_9H_10H_QH_vs_2H_3C_4D_5C_6D() {
+        Player player1 = new Player("player1", new Poker("4","H"), new Poker("7","H"), new Poker("9","H"),
+                new Poker("10","H"),new Poker("Q","H"));
+
+        Player player2 = new Player("player2", new Poker("3","H"), new Poker("2","C"), new Poker("4","D"),
+                new Poker("5","C"), new Poker("6","D"));
+
+        Game game = new Game(player1,player2);
+        String result = game.play();
+
+        assertEquals("player1 win",result);
     }
 }

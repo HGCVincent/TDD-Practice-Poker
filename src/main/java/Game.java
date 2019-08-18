@@ -7,6 +7,7 @@ public class Game {
     protected final static int TWO_PAIR = 3;
     protected final static int THREE_OF_A_KIND = 4;
     protected final static int STRAIGHT = 5;
+    protected final static int FLUSH = 6;
     private final String P1_WIN;
     private final String P2_WIN;
     private final String EQUALIZE = "Equalize";
@@ -41,10 +42,22 @@ public class Game {
         return true;
     }
 
-    public int setPlayerLevel(Map<Integer, Long> statisticalPoker) {
+    public boolean isFlush(List<PokerDto> pokerDtos){
+        for (int i = 0; i < pokerDtos.size() - 1; i++) {
+            if (pokerDtos.get(i).getType() != pokerDtos.get(i + 1).getType()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int setPlayerLevel(Map<Integer, Long> statisticalPoker, List<PokerDto> pokerDtos) {
         int sizeAfterStatistics = statisticalPoker.size();
         switch (sizeAfterStatistics) {
             case 5:
+                if (isFlush(pokerDtos)){
+                    return FLUSH;
+                }
                 if (isStraight(getPokerNumberByCount(statisticalPoker, 1))){
                     return STRAIGHT;
                 }
@@ -104,8 +117,8 @@ public class Game {
         StatisticalPoker1 = player1.getPokerDtos().stream().collect(Collectors.groupingBy(PokerDto::getNumber, Collectors.counting()));
         StatisticalPoker2 = player2.getPokerDtos().stream().collect(Collectors.groupingBy(PokerDto::getNumber, Collectors.counting()));
 
-        int levelP1 = setPlayerLevel(StatisticalPoker1);
-        int levelP2 = setPlayerLevel(StatisticalPoker2);
+        int levelP1 = setPlayerLevel(StatisticalPoker1, player1.getPokerDtos());
+        int levelP2 = setPlayerLevel(StatisticalPoker2, player2.getPokerDtos());
 
         if (levelP1 > levelP2) {
             return P1_WIN;
