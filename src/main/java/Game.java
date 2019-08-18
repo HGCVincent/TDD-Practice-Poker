@@ -5,6 +5,7 @@ public class Game {
     protected final static int HIGH_CARD = 1;
     protected final static int ONE_PAIR = 2;
     protected final static int TWO_PAIR = 3;
+    protected final static int THREE_OF_A_KIND = 4;
     private final String P1_WIN;
     private final String P2_WIN;
     private final String EQUALIZE = "Equalize";
@@ -30,12 +31,16 @@ public class Game {
         return keyList;
     }
 
-    public int setPlayerLevel(int sizeAfterStatistics) {
+    public int setPlayerLevel(Map<Integer, Long> statisticalPoker) {
+        int sizeAfterStatistics = statisticalPoker.size();
         switch (sizeAfterStatistics) {
             case 4:
                 return ONE_PAIR;
             case 3:
-                return TWO_PAIR;
+                if (getPokerNumberByCount(statisticalPoker, 3).size() == 0) {
+                    return TWO_PAIR;
+                }
+                else return THREE_OF_A_KIND;
             default:
                 return HIGH_CARD;
         }
@@ -45,7 +50,8 @@ public class Game {
         for (int i = 0; i < pokers1Number.size(); i++) {
             if (pokers1Number.get(i) > pokers2Number.get(i)) {
                 return P1_WIN;
-            } else if (pokers1Number.get(i) < pokers2Number.get(i)) {
+            }
+            else if (pokers1Number.get(i) < pokers2Number.get(i)) {
                 return P2_WIN;
             }
         }
@@ -65,7 +71,7 @@ public class Game {
         return CompareHighCard(getPokerNumberByCount(StatisticalPoker1, 1),getPokerNumberByCount(StatisticalPoker2, 1));
     }
 
-    public String CompareWhenEqual(int playerLevel){
+    public String CompareWhenSameLevel(int playerLevel){
         switch (playerLevel){
             case TWO_PAIR:
             case ONE_PAIR:
@@ -82,8 +88,8 @@ public class Game {
         StatisticalPoker1 = player1.getPokerDtos().stream().collect(Collectors.groupingBy(PokerDto::getNumber, Collectors.counting()));
         StatisticalPoker2 = player2.getPokerDtos().stream().collect(Collectors.groupingBy(PokerDto::getNumber, Collectors.counting()));
 
-        int levelP1 = setPlayerLevel(StatisticalPoker1.size());
-        int levelP2 = setPlayerLevel(StatisticalPoker2.size());
+        int levelP1 = setPlayerLevel(StatisticalPoker1);
+        int levelP2 = setPlayerLevel(StatisticalPoker2);
 
         if (levelP1 > levelP2) {
             return P1_WIN;
@@ -91,7 +97,7 @@ public class Game {
         if (levelP1 < levelP2) {
             return P2_WIN;
         }
-        return CompareWhenEqual(levelP1);
+        return CompareWhenSameLevel(levelP1);
     }
 
 }
